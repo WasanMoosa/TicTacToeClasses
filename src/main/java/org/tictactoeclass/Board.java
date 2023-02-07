@@ -5,6 +5,9 @@ import java.util.Scanner;
 /**
  * This is a board class, its responsibilities are:
  * 1)Show the grid board of the game.
+ * 2)know if someone win
+ * 3)put the symbol in the board
+ * 4)notify if the board is full
  */
 public class Board {
     public char[][] position = new char[3][3];
@@ -16,14 +19,6 @@ public class Board {
         this.position = position;
 
     }
-
-//    public Board(char[][] position, char symbol, int row, int column) {
-//        this.position = position;
-//        this.symbol = symbol;
-//        this.row = row;
-//        this.column = column;
-//
-//    }
 
     public void getBoard() {
 
