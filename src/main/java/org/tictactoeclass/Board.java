@@ -76,7 +76,7 @@ public class Board {
         Scanner input = new Scanner(System.in);
         boolean correctPosition = false;
         if (position[row][column] == ' ') {
-            position[row][column] = symbol;
+            position[row][column]=symbol;
             correctPosition = true;
         } else {
             System.out.print("The position reserved, choose other location: ");
@@ -90,11 +90,8 @@ public class Board {
     }
 
     //setter
-    public void setRow(int row) {
+    public void setNewPosition(int row,int column) {
         this.row = row;
-    }
-
-    public void setColumn(int column) {
         this.column = column;
     }
 
