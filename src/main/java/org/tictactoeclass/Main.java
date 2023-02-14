@@ -23,57 +23,65 @@ public class Main {
         Bot bot = new Bot("Sawan", '@');
         int turnCount = 0;
         int inputState = 1;
-
-        // Initialize menu Item of Tic Tac Toe
-        MenuItem onePlayer = new MenuItem(1, "One Player");
-        MenuItem twoPlayer = new MenuItem(2, "Two Player");
-
-        // Initialize the Top-level menu
-        Menu menu = new Menu("This is  Tic Tac Toe, Want to play", onePlayer);
-
-        // Add menu items to the Top-level menu
-        menu.addMenuItem(twoPlayer);
-
-        // Display the menu title and menu items
-        System.out.println(menu.getTitle() + "\n");
-        menu.showMenu();
-
-        // Read choice of Player
         int numOfPlayer = 0;
-        while (numOfPlayer < 1 || numOfPlayer > 2) {
-            System.out.print("\nEnter your choice: ");
-            try {
-                numOfPlayer = Integer.parseInt(input.nextLine());
-            } catch (Exception e) {
-                System.out.println("Invalid input. Please choose a number.");
-            }
-        }
-        ////////////////////
+
         // check the existence of file
         if (file.exists()) {
             System.out.print("Do you want to resume (press 0) ? or Start new game (press 1)");
             inputState = Integer.parseInt(input.nextLine());
-            //load the file to bring the objects
+
+            // load the file to bring the objects
             if (file.exists() && inputState == 0) {
                 StateManager.GameState state = stateManager.loadState();
                 board = state.getBoard();
                 player1 = state.getPlayer1();
+                if (player1.getName().equals(bot.getName())) {
+                    player1 = bot;
+                    numOfPlayer = 1;
+                }
                 player2 = state.getPlayer2();
                 turnCount = state.getTurnCount();
                 board.getBoard();
 
             }
         }
+
         //Start from beginning, so delete the previous file
         if (!file.exists() || inputState == 1) {
             if (file.exists()) {
                 stateManager.deleteFile();
             }
-            //Instantiate board
+            // Initialize menu Item of Tic Tac Toe
+            MenuItem onePlayer = new MenuItem(1, "One Player");
+            MenuItem twoPlayer = new MenuItem(2, "Two Player");
+
+            // Initialize the Top-level menu
+            Menu menu = new Menu("This is  Tic Tac Toe, Want to play", onePlayer);
+
+            // Add menu items to the Top-level menu
+            menu.addMenuItem(twoPlayer);
+
+            // Display the menu title and menu items
+            System.out.println(menu.getTitle() + "\n");
+            menu.showMenu();
+
+            // Read choice of Player
+            while (numOfPlayer < 1 || numOfPlayer > 2) {
+                System.out.print("\nEnter your choice: ");
+                try {
+                    numOfPlayer = Integer.parseInt(input.nextLine());
+                } catch (Exception e) {
+                    System.out.println("Invalid input. Please choose a number.");
+                }
+            }
+
+            // Instantiate board
             board = new Board(position);
-            //Start game
+
+            // Start game
             System.out.println("Start playing TIC TAC TOE");
-            //show board
+
+            // show board
             board.getBoard();
 
             if (numOfPlayer == 2) {
@@ -110,7 +118,7 @@ public class Main {
         }
         boolean exit = false;
 
-        //Only works if the board is not full, no one exit the game and no one win
+        // Only works if the board is not full, no one exit the game and no one win
         while (!board.isGridFull() && !board.win() && !exit) {
             String playerName = "Unknown";
             int row = 0;
@@ -118,18 +126,17 @@ public class Main {
             // Bot Action
             if (numOfPlayer == 1 && turnCount % 2 == 0) {
                 playerName = bot.getName();
-                row = bot.makemove().getRow();
-                column = bot.makemove().getColumn();
-                while (position[row][column] != ' ') {
+                board.setSymbol(bot.getSymbol());
+                boolean correctRandom=false;
+                while (!correctRandom) {
                     row = bot.makemove().getRow();
                     column = bot.makemove().getColumn();
+                    board.setNewPosition(row, column);
+                  correctRandom =board.changePosition("bot");
                 }
-                board.setSymbol(bot.getSymbol());
-                board.setNewPosition(row,column);
-                board.changePosition();
 
                 TimeUnit.SECONDS.sleep(1);
-                System.out.println("Sawan choosed "+ (row+1)+" "+ (column+1));
+                System.out.println("\n Sawan choosed " + (row + 1) + " " + (column + 1));
 
 
             } else {
@@ -147,6 +154,7 @@ public class Main {
                 boolean correctInput = false;
                 while (!correctInput && !exit) {
                     try {
+
                         //the user count the row and column from 1, while the program count it from 0
                         row = Integer.parseInt(input.next()) - 1;
                         column = Integer.parseInt(input.next()) - 1;
@@ -181,12 +189,12 @@ public class Main {
                     }
                 }
             }
-                board.getBoard();
-                //user win and delete file
-                if (board.win()) {
-                    System.out.println(playerName + " Great job,you are the winner!");
-                    stateManager.deleteFile();
-                }
+            board.getBoard();
+            //user win and delete file
+            if (board.win()) {
+                System.out.println(playerName + " Great job,you are the winner!");
+                stateManager.deleteFile();
+            }
 
             if (!exit && !board.win()) {
                 turnCount++;
