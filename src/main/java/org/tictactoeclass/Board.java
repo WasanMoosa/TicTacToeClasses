@@ -72,29 +72,38 @@ public class Board {
         return position;
     }
 
+
+    // change Position for human
     public boolean changePosition() {
+        Scanner input = new Scanner(System.in);
+        boolean correctPosition = false;
+        if (position[row][column] != ' ') {
+            System.out.print("The position reserved, choose other location: ");
+            row = Integer.parseInt(input.next()) - 1;
+            column = Integer.parseInt(input.next()) - 1;
+        } else {
+            position[row][column] = symbol;
+            correctPosition = true;
+
+        }
+        return correctPosition;
+    }
+
+    // change Position for bot
+    public boolean changePosition(String bot) {
         Scanner input = new Scanner(System.in);
         boolean correctPosition = false;
         if (position[row][column] == ' ') {
             position[row][column] = symbol;
             correctPosition = true;
-        } else {
-            System.out.print("The position reserved, choose other location: ");
-            row = Integer.parseInt(input.next()) - 1;
-            column = Integer.parseInt(input.next()) - 1;
-
         }
         return correctPosition;
-
-
     }
+
 
     //setter
-    public void setRow(int row) {
+    public void setNewPosition(int row, int column) {
         this.row = row;
-    }
-
-    public void setColumn(int column) {
         this.column = column;
     }
 
